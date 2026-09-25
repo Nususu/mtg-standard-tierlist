@@ -32,6 +32,12 @@
   .note { color: var(--ink-soft); font-size: 0.82rem; margin: 0 0 12px; line-height: 1.5; }
   .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 -16px; padding: 0 16px; }
   .table-scroll table { min-width: 640px; }
+  .table-scroll th:first-child, .table-scroll td:first-child {
+    position: sticky; left: 0; background: var(--panel);
+    border-right: 1px solid var(--line);
+  }
+  .table-scroll th:first-child { z-index: 2; }
+  .table-scroll td:first-child { z-index: 1; }
   table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
   th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); }
   td a { color: var(--accent); text-decoration: none; }
