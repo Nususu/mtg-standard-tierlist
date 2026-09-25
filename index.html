@@ -74,6 +74,12 @@
   .scatter .pt.neutral circle { fill: var(--accent); }
   .scatter .pt.neutral .ptlabel { fill: var(--ink); }
   .scatter .ptlabel { font-size: 10px; }
+  #tap-tip {
+    display: none; position: absolute; max-width: 260px; background: var(--ink);
+    color: var(--bg); font-size: 0.75rem; line-height: 1.4; padding: 6px 9px;
+    border-radius: 6px; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.35);
+    pointer-events: none;
+  }
 </style>
 </head>
 <body>
@@ -139,5 +145,47 @@
      archetype &divide; field total), small-sample shrinkage toward the field average, MTGO-Challenge-only
      (no paper RCQ or Arena data on our side).</p>
 </div>
+<script>
+(function() {
+  // hover-only title tooltips (table headers, scatter-chart dots) don't
+  // work on touch devices - this adds a tap-to-show equivalent without
+  // touching the existing hover behavior for desktop.
+  var tip;
+  function showTip(text, x, y) {
+    if (!tip) {
+      tip = document.createElement('div');
+      tip.id = 'tap-tip';
+      document.body.appendChild(tip);
+    }
+    tip.textContent = text;
+    var maxLeft = window.innerWidth - 280;
+    tip.style.left = Math.max(8, Math.min(x, maxLeft)) + 'px';
+    tip.style.top = y + 'px';
+    tip.style.display = 'block';
+  }
+  function hideTip() {
+    if (tip) tip.style.display = 'none';
+  }
+  document.addEventListener('click', function(e) {
+    var circle = e.target.closest('circle');
+    var titled = e.target.closest('[title]');
+    var text = null, anchor = null;
+    if (circle && circle.querySelector('title')) {
+      text = circle.querySelector('title').textContent;
+      anchor = circle;
+    } else if (titled) {
+      text = titled.getAttribute('title');
+      anchor = titled;
+    }
+    if (text) {
+      var r = anchor.getBoundingClientRect();
+      showTip(text, r.left + window.scrollX, r.bottom + window.scrollY + 6);
+      e.stopPropagation();
+    } else {
+      hideTip();
+    }
+  });
+})();
+</script>
 </body>
 </html>
